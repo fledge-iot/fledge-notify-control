@@ -86,13 +86,6 @@ bool ControlDelivery::notify(const string& notificationName,
 		log->debug("Plugin is not enabled, delivery of control message will not occur");
 		return false;
 	}
-       	if (!m_mgmtClient)
-	{
-		// Release lock	
-		m_configMutex.unlock();
-		log->error("Missing connection to management client, unable to deliver control message");
-		return false;
-	}
 
 	/*
 	 * Parse the triggerReason docuemnt and determine of this is a
@@ -235,7 +228,7 @@ bool ControlDelivery::notify(const string& notificationName,
 		}
 	}
 	log->debug("Send to dispatcher %s, %s", path.c_str(), payload.c_str());
-	return sendToDispatcher(path, payload);
+	return m_service->sendToDispatcher(path, payload);
 }
 
 /**
@@ -355,53 +348,3 @@ void ControlDelivery::dataSubstitution(string& message, const Value& obj)
 	message = rval;
 }
 
-
-/**
- * Send to the control dispatcher service
- *
- * @param path	The path component of the URL to send
- * @param payload	The JSON paylaod
- * @return bool		Return true if the paylaod was sent
- */
-bool ControlDelivery::sendToDispatcher(const string& path, const string& payload)
-{
-
-	// Send the control message to the south service
-	try {
-		ServiceRecord service("dispatcher");
-		if (!m_mgmtClient->getService(service))
-		{
-			Logger::getLogger()->error("Unable to find dispatcher service 'Dispatcher'");
-			return false;
-		}
-		string address = service.getAddress();
-		unsigned short port = service.getPort();
-		char addressAndPort[80];
-		snprintf(addressAndPort, sizeof(addressAndPort), "%s:%d", address.c_str(), port);
-		SimpleWeb::Client<SimpleWeb::HTTP> http(addressAndPort);
-
-		try {
-			SimpleWeb::CaseInsensitiveMultimap headers = {{"Content-Type", "application/json"}};
-			auto res = http.request("POST", path, payload, headers);
-			if (res->status_code.compare("202 Accepted"))
-			{
-				Logger::getLogger()->error("Failed to send control request to dispatcher service, %s",
-							res->status_code.c_str());
-				Logger::getLogger()->error("Failed Path %s, %s", path.c_str(), payload.c_str());
-				return false;
-			}
-		} catch (exception& e) {
-			Logger::getLogger()->error("Failed to send control operation to dispatcher service, %s",
-						e.what());
-			Logger::getLogger()->error("Failed Path %s, %s", path.c_str(), payload.c_str());
-			return false;
-		}
-
-		return true;
-	}
-	catch (exception &e) {
-		Logger::getLogger()->error("Failed to send control operation to dispatcher service, %s", e.what());
-		return false;
-	}
-
-}

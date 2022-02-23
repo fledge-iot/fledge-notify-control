@@ -83,7 +83,7 @@ extern "C" {
 static PLUGIN_INFORMATION info = {
 	PLUGIN_NAME,				// Name
 	VERSION,				// Version
-	SP_GET_MANAGEMENT,			// Flags
+	0,					// Flags
 	PLUGIN_TYPE_NOTIFICATION_DELIVERY,	// Type
 	"1.0.0",				// Interface version
 	default_config				// Configuration
@@ -117,9 +117,6 @@ PLUGIN_HANDLE plugin_init(ConfigCategory* configData)
 void plugin_start(PLUGIN_HANDLE handle)
 {
 	ControlDelivery* delivery = (ControlDelivery *)handle;
-
-	// Set the management service clients
-	delivery->setManagementClient();
 
 	return;
 }

@@ -32,21 +32,12 @@ class ControlDelivery
 			// service handler
 			m_service = (NotificationService *)(*getService)(service);;
 		};
-		// Set management client
-		void setManagementClient()
-		{
-			if (m_service)
-				m_mgmtClient = m_service->getManagementClient();
-			else
-				m_mgmtClient = NULL;
-		}	
 		void	configLock() { m_configMutex.lock(); };
 		void	configUnlock() { m_configMutex.unlock(); };
 
 
 	private:
 		void 		dataSubstitution(string& message, const Value& obj);
-		bool		sendToDispatcher(const string& path, const string& payload);
 		bool		m_enable;
 		std::string	m_southService;
 		std::string	m_triggerValue;
