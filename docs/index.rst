@@ -1,5 +1,5 @@
 .. Images
-.. |control_1| image:: images/control_1.jpg
+.. |control_1| image:: images/control_01.jpg
 
 
 Control Dispatcher Notification
@@ -30,7 +30,7 @@ Once you have created your notification rule and move on to the delivery mechani
 Trigger Values
 --------------
 
-The *Trigger Value* and *Cleared Value* are JSON documents that are sent to the dispatcher. The format of these is a JSON document that describes the control operation to perform. The document contains a definition of the recipiant of the control input, this may be a south service, an asset, an automation script or all south services. If the recipiant is a service then the document contains a *service* key, the value of which is the name of the south service that should receieve the control operation. To send the control request to the south service responsible for the ingest of a particualr asset, then an *asset* key would be given. If sendign to an automation script then a *script* key woudl be given. If known of the *service*, *asset* or *script* keys are given then the request willbe sent to all south services that support control.
+The *Trigger Value* and *Cleared Value* are JSON documents that are sent to the dispatcher. The format of these is a JSON document that describes the control operation to perform. The document contains a definition of the recipient of the control input, this may be a south service, an asset, an automation script or all south services. If the recipient is a service then the document contains a *service* key, the value of which is the name of the south service that should receive the control operation. To send the control request to the south service responsible for the ingest of a particular asset, then an *asset* key would be given. If sending to an automation script then a *script* key would be given. If known of the *service*, *asset* or *script* keys are given then the request will be sent to all south services that support control.
 
 The document also contains the control request that should be made, either a *write* or an *operation* and the values to write or the name and parameters of the operation to perform.
 
@@ -64,7 +64,7 @@ We create a notification that is triggered if the *desiredSpeed* is greater than
 
 In this case the *speed* value will be substituted by the value of the *desiredSpeed* data point of the *equipment* asset that triggered the notification to be sent.
 
-If then fan is controlled by the same south service that is ingesting the data into the asser *equipment*, then we could use the *asset* destiantion key rather than name the south service explicitly. 
+If then fan is controlled by the same south service that is ingesting the data into the asser *equipment*, then we could use the *asset* destination key rather than name the south service explicitly.
 
 .. code-block:: JSON
 
@@ -76,7 +76,7 @@ If then fan is controlled by the same south service that is ingesting the data i
        }
     }
 
-Another option for controling the destination of a control request is to broadcast it to all south services. In this example we will assume we want to trigger a shutdown operation across all the devices we monitor.
+Another option for controlling the destination of a control request is to broadcast it to all south services. In this example we will assume we want to trigger a shutdown operation across all the devices we monitor.
 
 .. code-block:: JSON
 
