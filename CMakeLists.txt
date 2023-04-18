@@ -66,7 +66,7 @@ include_directories(${FLEDGE_INCLUDE_DIRS})
 # Add Notification server includes from NOTIFICATION_SERVICE_INCLUDE_DIRS env variable
 if (NOT DEFINED ENV{NOTIFICATION_SERVICE_INCLUDE_DIRS})
         # Stop the build process
-        message(FATAL_ERROR "FogLAMP plugin '${PROJECT_NAME}' build error. "
+        message(FATAL_ERROR "Fledge plugin '${PROJECT_NAME}' build error. "
                 "Notification server includes dir not set. Use NOTIFICATION_SERVICE_INCLUDE_DIRS env variable")
 else()
         message(STATUS "Notification server includes dir set to $ENV{NOTIFICATION_SERVICE_INCLUDE_DIRS}")

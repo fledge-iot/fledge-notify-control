@@ -1,5 +1,5 @@
 /*
- * FogLAMP Control Delivery plugin
+ * Fledge Control Delivery plugin
  *
  * Copyright (c) 2022 Dianomic Systems
  *
