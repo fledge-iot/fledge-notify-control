@@ -1,6 +1,9 @@
 .. Images
 .. |control_1| image:: images/control_01.jpg
 
+.. |scripts| raw:: html
+
+    <a href="../control.html#automation-scripts">Automation Scripts</a>
 
 Control Dispatcher Notification
 ===============================
@@ -64,7 +67,7 @@ We create a notification that is triggered if the *desiredSpeed* is greater than
 
 In this case the *speed* value will be substituted by the value of the *desiredSpeed* data point of the *equipment* asset that triggered the notification to be sent.
 
-If then fan is controlled by the same south service that is ingesting the data into the asser *equipment*, then we could use the *asset* destination key rather than name the south service explicitly.
+If then fan is controlled by the same south service that is ingesting the data into the asset *equipment*, then we could use the *asset* destination key rather than name the south service explicitly.
 
 .. code-block:: JSON
 
@@ -75,6 +78,21 @@ If then fan is controlled by the same south service that is ingesting the data i
             "run"   : "1"
        }
     }
+
+It is also possible to deliver a control request to a control script. To do this we use the *script* destination in the definition of the trigger action.
+
+.. code-block:: JSON
+
+   {
+       "script" : "setSpeed",
+       "write": {
+            "speed" : "$equipment.desiredSpeed$"
+       }
+    }
+
+The above trigger definition will call the script *setSpeed* with the parameter *speed*. You will note in this case we have only given a single parameter, it is possible to have multiple parameters but in the example we have assumed the script will deal with the fixed action of writing *1* to the *run* set point of the destination.
+
+Scripts offer a much richer set of actions than a single write as they allow for sending requests to multiple destinations, having conditional steps in the script, inducing delays between operations. Scripts are more fully described in the section on |scripts|.
 
 Another option for controlling the destination of a control request is to broadcast it to all south services. In this example we will assume we want to trigger a shutdown operation across all the devices we monitor.
 
