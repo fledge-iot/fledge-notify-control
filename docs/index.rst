@@ -33,9 +33,22 @@ Once you have created your notification rule and move on to the delivery mechani
 Trigger Values
 --------------
 
-The *Trigger Value* and *Cleared Value* are JSON documents that are sent to the dispatcher. The format of these is a JSON document that describes the control operation to perform. The document contains a definition of the recipient of the control input, this may be a south service, an asset, an automation script or all south services. If the recipient is a service then the document contains a *service* key, the value of which is the name of the south service that should receive the control operation. To send the control request to the south service responsible for the ingest of a particular asset, then an *asset* key would be given. If sending to an automation script then a *script* key would be given. If known of the *service*, *asset* or *script* keys are given then the request will be sent to all south services that support control.
+The *Trigger Value* and *Cleared Value* are JSON documents that are sent to the dispatcher. The format of these is a JSON document that describes the control operation to perform.
+
+The document also contains a definition of the recipient of the control input, this may be a south service, an asset, an automation script or all south services.
+
+If the recipient is a service then the document contains a *service* key, the value of which is the name of the south service that should receive the control operation.
+
+To send the control request to the south service responsible for the ingest of a particular asset, then an *asset* key would be given.
+
+If sending to an automation script then a *script* key would be given.
+
+If none of the *service*, *asset* or *script* keys are given then the request will be sent to all south services that support control.
 
 The document also contains the control request that should be made, either a *write* or an *operation* and the values to write or the name and parameters of the operation to perform.
+
+Examples
+~~~~~~~~
 
 The example below shows a JSON document that would cause the two values *temperature* and *rate* to be written to the south service called *oven001*.
 
@@ -67,7 +80,10 @@ We create a notification that is triggered if the *desiredSpeed* is greater than
 
 In this case the *speed* value will be substituted by the value of the *desiredSpeed* data point of the *equipment* asset that triggered the notification to be sent.
 
-If then fan is controlled by the same south service that is ingesting the data into the asset *equipment*, then we could use the *asset* destination key rather than name the south service explicitly.
+Asset Based Control
+###################
+
+If the fan is controlled by the same south service that is ingesting the data into the asset *equipment*, then we could use the *asset* destination key rather than name the south service explicitly. This is useful because it allows us to write control paths that related to physical assets rather than the services in Fledge that are monitoring the assets.
 
 .. code-block:: JSON
 
@@ -78,6 +94,9 @@ If then fan is controlled by the same south service that is ingesting the data i
             "run"   : "1"
        }
     }
+
+Script Based Control
+####################
 
 It is also possible to deliver a control request to a control script. To do this we use the *script* destination in the definition of the trigger action.
 
@@ -94,6 +113,9 @@ The above trigger definition will call the script *setSpeed* with the parameter 
 
 Scripts offer a much richer set of actions than a single write as they allow for sending requests to multiple destinations, having conditional steps in the script, inducing delays between operations. Scripts are more fully described in the section on |scripts|.
 
+Broadcast Control
+#################
+
 Another option for controlling the destination of a control request is to broadcast it to all south services. In this example we will assume we want to trigger a shutdown operation across all the devices we monitor.
 
 .. code-block:: JSON
@@ -105,3 +127,5 @@ Another option for controlling the destination of a control request is to broadc
     }
 
 Here we are not giving *asset*, *script* or *service* keys, therefore the control request will be broadcast. Also we have used an *operation* rather than a *write* request. The operation name is *shutdown* and we have assumed it takes no arguments.
+
+Broadcasting control operations like this is useful if we want to control a set of assets in a single request. Any south service that receives the request and does not implement the operation, has control disabled or does not support the write operation on the key given will simply ignore the request.
