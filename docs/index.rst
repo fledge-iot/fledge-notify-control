@@ -3,7 +3,7 @@
 
 .. |scripts| raw:: html
 
-    <a href="../control.html#automation-scripts">Automation Scripts</a>
+    <a href="../../control.html#automation-scripts">Automation Scripts</a>
 
 Control Dispatcher Notification
 ===============================
